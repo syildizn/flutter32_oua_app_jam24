@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as Path;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 
 class AddLocationPage extends StatefulWidget {
@@ -21,7 +22,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
   final TextEditingController _cityController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;
-
+  LatLng? _selectedLocation;
 
   @override
   void dispose() {
@@ -94,6 +95,37 @@ class _AddLocationPageState extends State<AddLocationPage> {
   }
 
 
+  // Kullanıcının harita üzerinde bir konum seçmesi için bir fonksiyon
+  void _selectLocation(LatLng position) {
+    setState(() {
+      _selectedLocation = position;
+    });
+    Navigator.of(context).pop();  // Harita ekranını kapat
+  }
+
+  // Harita göstermek için bir dialog açan fonksiyon
+  void _showMapDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Container(
+            height: 600, // Harita için yükseklik belirleyin
+            width: 600,
+            child: GoogleMap(
+              onMapCreated: (GoogleMapController controller) {},
+              initialCameraPosition: CameraPosition(
+                target: LatLng(37.77483, -122.41942), // Başlangıç konumu
+                zoom: 12,
+              ),
+              onTap: _selectLocation, // Haritaya dokunulduğunda konum seç
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       String city = _cityController.text;
@@ -108,6 +140,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
         'adress': _addressController.text,
         'feature': _featureController.text,
         'image': imageUrl,
+        'location': GeoPoint(_selectedLocation!.latitude, _selectedLocation!.longitude), // Seçilen konum
       });
 
       // Formu gönderdikten sonra önceki sayfaya dön
@@ -188,6 +221,18 @@ class _AddLocationPageState extends State<AddLocationPage> {
                 ],
               ),
             ),
+            SizedBox(height: 10),
+
+            ElevatedButton(
+              onPressed: _showMapDialog, // Harita dialogunu açar
+              child: Text('Konum Seç'),
+            ),
+
+            if (_selectedLocation != null)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Seçilen Konum: ${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}'),
+              ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _submitForm,

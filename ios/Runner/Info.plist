@@ -10,6 +10,10 @@
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>Bu uygulama harita verilerini gösterirken konumunuzu kullanır</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Bu uygulama her zaman konumunuzu kullanabilir</string>
 	<key>NSPhotoLibraryUsageDescription</key>
     <string>Galeriden resim seçmek için izin gerekiyor</string>
 	<key>CFBundleInfoDictionaryVersion</key>
