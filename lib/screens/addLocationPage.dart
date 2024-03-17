@@ -38,6 +38,9 @@ class _AddLocationPageState extends State<AddLocationPage> {
       if (pickedFile != null) {
         setState(() {
           _imageFile = pickedFile;
+          if (pickedFile != null) {
+            _showImageSelectedAlert();
+          }
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -50,6 +53,34 @@ class _AddLocationPageState extends State<AddLocationPage> {
         SnackBar(content: Text('Resim seçme işlemi sırasında bir hata oluştu: $e')),
       );
     }
+  }
+
+  void _showImageSelectedAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Resim Seçildi'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Seçilen resim başarıyla yüklendi.'),
+                SizedBox(height: 15),
+                Image.file(File(_imageFile!.path)),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Tamam'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<String> _uploadImageToStorage(File image) async {
@@ -65,7 +96,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      String city = _cityController.text.toLowerCase();
+      String city = _cityController.text;
       String imageUrl = '';
       if (_imageFile != null) {
         imageUrl = await _uploadImageToStorage(File(_imageFile!.path));
@@ -144,12 +175,16 @@ class _AddLocationPageState extends State<AddLocationPage> {
 
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text("Resim Seç"),
+                  Text("Resim Seç:"),
                   IconButton(onPressed: ()async{
                     await _pickImage();
-                  }, icon: Icon(Icons.image))
+                  }, icon: Icon(Icons.image)),
+                  if (_imageFile != null)
+                    Icon(Icons.check_circle, color: Colors.green) // Resim seçildiyse yeşil tik
+                  else
+                    Icon(Icons.cancel, color: Colors.red), // Resim seçilmediyse kırmızı x
                 ],
               ),
             ),

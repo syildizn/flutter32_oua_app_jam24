@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String _selectedCity = 'İzmir'; // Varsayılan şehir
+  String _selectedCity = 'izmir'; // Varsayılan şehir
 
   @override
   Widget build(BuildContext context) {
@@ -25,22 +25,32 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('Ana Sayfa'),
         actions: <Widget>[
-          DropdownButton<String>(
-            value: _selectedCity,
-            icon: Icon(Icons.arrow_downward),
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedCity = newValue!;
-              });
-            },
-            items: <String>['İzmir', 'İstanbul', 'Ankara']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('cities').snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return CircularProgressIndicator();  // Veri yüklenirken bir yükleme çarkı göster
+              }
+              var citiesList = snapshot.data!.docs.map((doc) => doc.id).toList();
+              print(citiesList);
+              return DropdownButton<String>(
+                value: _selectedCity,
+                icon: Icon(Icons.arrow_downward),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedCity = newValue!;
+                  });
+                },
+                items: citiesList.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
               );
-            }).toList(),
+            },
           ),
+
           IconButton(
               onPressed: () async {
                 await _auth.signOut();
