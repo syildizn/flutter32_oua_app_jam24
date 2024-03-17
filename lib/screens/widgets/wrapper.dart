@@ -7,7 +7,7 @@ class Wrapper extends StatelessWidget {
 
   static String routeName = "Wrapper";
 
-  const Wrapper({super.key});
+  const Wrapper({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,11 @@ class Wrapper extends StatelessWidget {
         }
         // Snapshot'ta veri varsa ve kullanıcı nesnesi null değilse, kullanıcı giriş yapmış demektir.
         if (snapshot.hasData && snapshot.data != null) {
-          return HomePage(); // Kullanıcı giriş yapmışsa HomePage'e yönlendir
+          // Kullanıcı giriş yapmışsa HomePage'e yönlendir
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+          });
+          return Container(); // Bu sırada gösterilecek bir geçici widget, örneğin boş bir Container
         }
         // Kullanıcı giriş yapmamışsa SignInPage'e yönlendir
         return SignInPage();

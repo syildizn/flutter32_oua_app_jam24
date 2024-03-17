@@ -11,6 +11,6 @@ Map<String,WidgetBuilder> routes = <String, WidgetBuilder>{
   SignInPage.routeName:(context) => SignInPage(),
   SignUpPage.routeName:(context) => SignUpPage(),
   Wrapper.routeName:(context) => const Wrapper(),
-  DetailPage.routeName:(context) => const DetailPage(data: {},documaIdsi: ""),
+  DetailPage.routeName:(context) => const DetailPage(),
   AddLocationPage.routeName:(context) => AddLocationPage(),
 };

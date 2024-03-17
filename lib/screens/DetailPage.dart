@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatefulWidget {
-  static String routeName = "homePage";
+  static String routeName = "detailPage";
 
-  final Map<String?, dynamic> data;
-  final String documaIdsi;
+  final Map<String?, dynamic>? data;
+  final String? documaIdsi;
 
-  const DetailPage({Key? key, required this.data, required this.documaIdsi}) : super(key: key);
+  const DetailPage({Key? key,  this.data,  this.documaIdsi}) : super(key: key);
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -53,11 +53,11 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final String image = widget.data['image'] ?? 'https://via.placeholder.com/100';
-    final String name = widget.data['name'] ?? 'İsim yok';
-    final String address = widget.data['adress'] ?? 'Adres yok';
-    final String feature = widget.data['feature'] ?? 'Özellik yok';
-    final GeoPoint? location = widget.data['location'];
+    final String image = widget.data?['image'] ?? 'https://via.placeholder.com/100';
+    final String name = widget.data?['name'] ?? 'İsim yok';
+    final String address = widget.data?['adress'] ?? 'Adres yok';
+    final String feature = widget.data?['feature'] ?? 'Özellik yok';
+    final GeoPoint? location = widget.data?['location'];
     final double? latitude = location?.latitude;
     final double? longitude = location?.longitude;
 
@@ -67,7 +67,7 @@ class _DetailPageState extends State<DetailPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.data['name'] ?? 'İsim yok'), // veya başka bir başlık
+        title: Text(widget.data?['name'] ?? 'İsim yok'), // veya başka bir başlık
       ),
       body: SingleChildScrollView(
         child: Column(
