@@ -85,13 +85,14 @@ class _HomePageState extends State<HomePage> {
               final String address = data['adress'] ?? 'Adres yok';
               final String image = data['image'] ?? 'https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*'; // Varsayılan bir resim URL'si sağlayın
               final String feature = data['feature'] ?? 'Özellik yok';
+              final String documentId = data['id'] ?? document.id.toString();
 
               return ListTile(
                 title: Text(name),
                 subtitle: Text(address),
                 trailing: Image.network(image, width: 100, height: 100),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailPage(data: data)));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailPage(data: data,documaIdsi: document.id.toString(),)));
                 } ,
               );
             }).toList(),
