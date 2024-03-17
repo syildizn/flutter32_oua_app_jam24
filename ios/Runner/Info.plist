@@ -10,6 +10,8 @@
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Uygulamamızın bazı özellikleri için her zaman ve uygulama kullanılırken konum bilgisi gerekebilir</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
     <string>Bu uygulama harita verilerini gösterirken konumunuzu kullanır</string>
     <key>NSLocationAlwaysUsageDescription</key>
@@ -18,6 +20,12 @@
     <string>Galeriden resim seçmek için izin gerekiyor</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>http</string>
+        <string>https</string>
+        <string>comgooglemaps</string>
+    </array>
 	<key>CFBundleName</key>
 	<string>flutter32_oua_app_jam24</string>
 	<key>CFBundlePackageType</key>

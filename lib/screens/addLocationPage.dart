@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as Path;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 
 class AddLocationPage extends StatefulWidget {
@@ -23,6 +24,9 @@ class _AddLocationPageState extends State<AddLocationPage> {
   final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;
   LatLng? _selectedLocation;
+  Location _location = Location();
+  LatLng? _initialPosition;
+
 
   @override
   void dispose() {
@@ -31,6 +35,24 @@ class _AddLocationPageState extends State<AddLocationPage> {
     _featureController.dispose();
     _cityController.dispose();
     super.dispose();
+  }
+
+  Future<void> _getUserLocation() async {
+    try {
+      final userLocation = await _location.getLocation();
+      setState(() {
+        _initialPosition = LatLng(userLocation.latitude!, userLocation.longitude!);
+      });
+    } on Exception catch (e) {
+      // Konum bilgisi alınamadığında bir hata mesajı gösterebilirsiniz.
+      print('Konum bilgisi alınamadı: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserLocation();
   }
 
   Future<void> _pickImage() async {
@@ -115,8 +137,8 @@ class _AddLocationPageState extends State<AddLocationPage> {
             child: GoogleMap(
               onMapCreated: (GoogleMapController controller) {},
               initialCameraPosition: CameraPosition(
-                target: LatLng(37.77483, -122.41942), // Başlangıç konumu
-                zoom: 12,
+                target: _initialPosition ?? LatLng(38.5820911, 26.9637778), // Başlangıç konumu
+                zoom: 17,
               ),
               onTap: _selectLocation, // Haritaya dokunulduğunda konum seç
             ),

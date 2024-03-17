@@ -1,5 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!-- Bu izin uygulamanın kullanıcının mevcut konumunu almasına izin verir -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- Bu izin, uygulamanın arka planda konum almasına izin verir (eğer gerekirse) -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
     <application
         android:label="flutter32_oua_app_jam24"
         android:name="${applicationName}"
