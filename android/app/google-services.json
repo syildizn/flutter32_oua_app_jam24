@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "664883077975",
+    "project_id": "ouaappjam24",
+    "storage_bucket": "ouaappjam24.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:664883077975:android:60244e2f714ad900b05412",
+        "android_client_info": {
+          "package_name": "com.example.flutter32_oua_app_jam24"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBC6iy_iBHI6xO59sZxjJkZu2uyAFIdYqM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
