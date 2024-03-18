@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter32_oua_app_jam24/screens/DetailPage.dart';
 import 'package:flutter32_oua_app_jam24/screens/addLocationPage.dart';
+import 'package:flutter32_oua_app_jam24/screens/profilPage.dart';
 import 'package:flutter32_oua_app_jam24/screens/signInPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,10 +23,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color.fromRGBO(230,237,247,1),
       appBar: AppBar(
+        leading: IconButton(onPressed: (){
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => ProfilScreen()),
+          );
+        },icon: Icon(Icons.person,color: Colors.white,)),
         backgroundColor: Colors.deepOrange.shade300,
-        title: Text('Ana Sayfa', style: TextStyle(color: Colors.white)),
+        title: Text('Ana Sayfa', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),),
         actions: <Widget>[
           StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance.collection('cities').snapshots(),
@@ -64,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       margin: EdgeInsets.symmetric(vertical: 4), // Menü öğeleri arasında boşluk
                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                      child: Text(value, style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold)),
+                      child: Text(value, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                     ),
                   );
                 }).toList(),

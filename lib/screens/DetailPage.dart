@@ -66,41 +66,88 @@ class _DetailPageState extends State<DetailPage> {
 
 
     return Scaffold(
+      backgroundColor: Color.fromRGBO(230,237,247,1),
       appBar: AppBar(
-        title: Text(widget.data?['name'] ?? 'İsim yok'), // veya başka bir başlık
+        backgroundColor: Colors.deepOrange.shade300,
+        title: Text(widget.data?['name'] ?? 'İsim yok', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),), // veya başka bir başlık
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(18.0),
-              child: Image.network(image),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.0), // Resme yuvarlak köşeler ekledik
+                child: Image.network(image, fit: BoxFit.cover,height: 200), // Resmi kaplayacak şekilde ayarladık
+              ),
             ),
 
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(mainAxisAlignment: MainAxisAlignment.center,
+              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 18.0),
+              child: Row(mainAxisAlignment:  MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Adres: $address " ),
-                  Text("              Konum:"),
-                  IconButton(onPressed: (){
-                    if (location != null ) {
-                      // Enlem ve boylam bilgisini kullanarak harita uygulamasını başlat
-                      _launchMaps(location.latitude , location.longitude );
-                    }else {
-                      // Eğer konum verisi yoksa varsayılan bir konum kullanabilirsiniz
-                      _launchMaps(38.5820911, 26.9637778);
-                    }
-                  }, icon: Icon(Icons.assistant_navigation,color: Colors.blue,)),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
+                      child: Text(
+                        "Adres: $address",
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+
+                  Row(
+                    children: [
+                      Text("              Konum:",),
+                      IconButton(onPressed: (){
+                        if (location != null ) {
+                          // Enlem ve boylam bilgisini kullanarak harita uygulamasını başlat
+                          _launchMaps(location.latitude , location.longitude );
+                        }else {
+                          // Eğer konum verisi yoksa varsayılan bir konum kullanabilirsiniz
+                          _launchMaps(38.5820911, 26.9637778);
+                        }
+                      }, icon: Icon(Icons.assistant_navigation,color: Colors.blue,)),
+                    ],
+                  ),
                 ],
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                color: Color.fromRGBO(230,237,247,1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 4,
+                    offset: Offset(0, 1), // changes position of shadow
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(18.0),
+              width: double.infinity,
+               // Özellikler için arka plan rengi
+              child: Text(
+                feature,
+                style: TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(18.0),
-              child: Text(feature),
+              child: Divider(),
             ),
             Padding(
-              padding: const EdgeInsets.all(18.0),
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: Text(
+                "Yorumlar",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 18.0),
               child: StreamBuilder<QuerySnapshot>(
                 stream: _loadComments(documentId),
                 builder: (context, snapshot) {
@@ -113,30 +160,42 @@ class _DetailPageState extends State<DetailPage> {
                         "snapError: ${snapshot.hasError} snapData: ${!snapshot.hasData} snapEmpt: ${snapshot.data?.docs.isEmpty} "
                     );
                     print(snapshot.error.toString());
-                    return Center(child: Text("Henüz yorum yok."));
+                    return Center(child: Text("Henüz yorum yok.",style: TextStyle(fontSize: 16)));
                   }
 
                   return ListView.builder(
                     shrinkWrap: true,
-
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       final commentData = snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                      return ListTile(
-                        title: Text(commentData['text'] ?? ""),
-                        subtitle: Text(commentData['createdAt'] == null ? "" : (commentData['createdAt'] as Timestamp).toDate().toString()),
+                      return Card(
+                        color: Colors.orange.shade100,
+                        elevation: 3,
+                        margin: EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                        child: ListTile(
+                          title: Text(
+                            commentData['text'] ?? "",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text(
+                            commentData['createdAt'] == null ? "" : (commentData['createdAt'] as Timestamp).toDate().toString(),
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ),
                       );
                     },
                   );
                 },
               ),
             ),
+            Divider(),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const  EdgeInsets.all(18.0),
               child: Divider(),
             ),
             Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(18.0),
               child: Row(
                 children: [
                   Expanded(
@@ -145,11 +204,17 @@ class _DetailPageState extends State<DetailPage> {
                       decoration: InputDecoration(
                         labelText: 'Yorum yap',
                         border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue),
+                        ),
                       ),
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.send),
+                    icon: Icon(Icons.send, color: Colors.blue),
                     onPressed: () {
                       if (_commentController.text.isNotEmpty) {
                         _addComment(documentId, _commentController.text);

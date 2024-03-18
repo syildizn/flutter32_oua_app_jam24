@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter32_oua_app_jam24/screens/signInPage.dart';
@@ -99,12 +100,40 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 child: Text('Kayıt Ol', style: TextStyle(color: Colors.white)),
                 onPressed: () async {
-                  dynamic result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-                  if (result != null) {
-                    _showDialog(title: 'Başarılı', content: 'Başarılı şekilde kayıt oldunuz. Şimdi giriş sayfasına gidip giriş yapabilirsiniz.', navigateToSignIn: true);
-                  } else {
-                    _showDialog(title: 'Hata', content: _errorMessage ?? 'Kayıt olurken bir hata oluştu.');
+                  // dynamic result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+                  // if (result != null) {
+                  //   _showDialog(title: 'Başarılı', content: 'Başarılı şekilde kayıt oldunuz. Şimdi giriş sayfasına gidip giriş yapabilirsiniz.', navigateToSignIn: true);
+                  // } else {
+                  //   _showDialog(title: 'Hata', content: _errorMessage ?? 'Kayıt olurken bir hata oluştu.');
+                  // }
+                  try {
+                    // Kullanıcıyı e-posta ve şifre ile kaydeder
+                    UserCredential result = await _auth.createUserWithEmailAndPassword(
+                        email: email,
+                        password: password
+                    );
+
+                    // Kullanıcı oluşturulduğunda Firestore'da yeni bir kullanıcı dokümanı oluşturur
+                    if (result.user != null) {
+                      await FirebaseFirestore.instance.collection('users').doc(result.user!.uid).set({
+                        'name': '', // Boş string olarak ayarla
+                        'image': '', // Boş string olarak ayarla
+                        'mail': result.user!.email, // Kullanıcının e-postasını kaydet
+                        'id': result.user!.uid.toString(),
+
+                      });
+
+                      _showDialog(title: 'Başarılı', content: 'Başarılı şekilde kayıt oldunuz. Şimdi giriş sayfasına gidip giriş yapabilirsiniz.', navigateToSignIn: true);
+                    }
+                  } catch (error) {
+                    // Firebase'den gelen hata mesajını kullanarak hata diyalogunu göster
+                    String errorMessage = 'Kayıt olurken bir hata oluştu.';
+                    if (error is FirebaseAuthException) {
+                      errorMessage = error.message ?? errorMessage;
+                    }
+                    _showDialog(title: 'Hata', content: errorMessage);
                   }
+
                 },
               ),
               SizedBox(height: 30),

@@ -26,6 +26,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
   LatLng? _selectedLocation;
   Location _location = Location();
   LatLng? _initialPosition;
+  String? _selectedCity;
 
 
   @override
@@ -156,13 +157,25 @@ class _AddLocationPageState extends State<AddLocationPage> {
         imageUrl = await _uploadImageToStorage(File(_imageFile!.path));
       }
 
-      // Firestore koleksiyonuna yeni bir mekan ekleyin
-      await FirebaseFirestore.instance.collection('cities/$city/location').add({
+      // // Firestore koleksiyonuna yeni bir mekan ekleyin
+      // await FirebaseFirestore.instance.collection('cities/$city/location').add({
+      //   'name': _nameController.text,
+      //   'adress': _addressController.text,
+      //   'feature': _featureController.text,
+      //   'image': imageUrl,
+      //   'location': GeoPoint(_selectedLocation!.latitude, _selectedLocation!.longitude), // Seçilen konum
+      //   'id':,
+      // });
+      // Belge referansı oluştur
+      DocumentReference docRef = FirebaseFirestore.instance.collection('cities/$city/location').doc();
+      // Firestore'a yeni döküman gönder
+      await docRef.set({
         'name': _nameController.text,
         'adress': _addressController.text,
         'feature': _featureController.text,
         'image': imageUrl,
-        'location': GeoPoint(_selectedLocation!.latitude, _selectedLocation!.longitude), // Seçilen konum
+        'location': GeoPoint(_selectedLocation!.latitude, _selectedLocation!.longitude),
+        'id': docRef.id, // Otomatik olarak oluşturulan ID'yi belgeye ayarlayın
       });
 
       // Formu gönderdikten sonra önceki sayfaya dön
@@ -178,28 +191,66 @@ class _AddLocationPageState extends State<AddLocationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Mekan Öner')),
+      backgroundColor: Color.fromRGBO(230,237,247,1),
+      appBar: AppBar(
+        backgroundColor: Colors.deepOrange.shade300,
+      title: Text('Mekan Öner',style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),)),
       body: Form(
         key: _formKey,
         child: ListView(
           padding: EdgeInsets.all(16.0),
           children: <Widget>[
-            TextFormField(
-                controller: _cityController,
-                decoration: InputDecoration(labelText: 'Şehir Adı'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Şehir adı boş bırakılamaz';
-                  }
-                  final validCharacters = RegExp(r'^[a-zA-Z0-9]+$');
-                  if (!validCharacters.hasMatch(value)) {
-                    return 'Geçersiz karakterler içermemelidir (Özel semboller, Türkçe karakterler vs.)';
-                  }
-                  return null;
-                }),
+            // TextFormField(
+            //     controller: _cityController,
+            //     decoration: InputDecoration(labelText: 'Şehir Adı'),
+            //     validator: (value) {
+            //       if (value == null || value.isEmpty) {
+            //         return 'Şehir adı boş bırakılamaz';
+            //       }
+            //       final validCharacters = RegExp(r'^[a-zA-Z0-9]+$');
+            //       if (!validCharacters.hasMatch(value)) {
+            //         return 'Geçersiz karakterler içermemelidir (Özel semboller, Türkçe karakterler vs.)';
+            //       }
+            //       return null;
+            //     }),
+        DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          labelText: 'Şehir Seçiniz',
+          border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blue, width: 2.0)
+          ),
+          filled: true,
+          fillColor: Colors.white,
+        ),
+        value: _selectedCity,
+        onChanged: (String? newValue) {
+          setState(() {
+            _selectedCity = newValue;
+          });
+        },
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Lütfen bir şehir seçiniz';
+          }
+          return null;
+        },
+        items: <String>['izmir', 'istanbul', 'ankara']
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ),
+            SizedBox(height: 20),
             TextFormField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Mekan Adı'),
+                decoration: InputDecoration(
+                  labelText: 'Mekan Adı',
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Mekan adı boş bırakılamaz';
@@ -207,9 +258,17 @@ class _AddLocationPageState extends State<AddLocationPage> {
                 return null;
               },
             ),
+            SizedBox(height: 20),
             TextFormField(
               controller: _addressController,
-              decoration: InputDecoration(labelText: 'Adres'),
+              decoration: InputDecoration(
+                labelText: 'Adres',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 2.0)
+                ),
+                filled: true,
+                fillColor: Colors.white,
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Adres boş bırakılamaz';
@@ -217,9 +276,17 @@ class _AddLocationPageState extends State<AddLocationPage> {
                 return null;
               },
             ),
+            SizedBox(height: 20),
             TextFormField(
               controller: _featureController,
-              decoration: InputDecoration(labelText: 'Özellikler'),
+              decoration: InputDecoration(
+                labelText: 'Özellikler',
+                border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 2.0)
+                ),
+                filled: true,
+                fillColor: Colors.white,
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Özellikler boş bırakılamaz';
@@ -227,6 +294,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
                 return null;
               },
             ),
+            SizedBox(height: 20),
 
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -246,8 +314,14 @@ class _AddLocationPageState extends State<AddLocationPage> {
             SizedBox(height: 10),
 
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.greenAccent.shade400,
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                textStyle:
+                TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               onPressed: _showMapDialog, // Harita dialogunu açar
-              child: Text('Konum Seç'),
+              child: Text('Konum Seç',style: TextStyle(color: Colors.white)),
             ),
 
             if (_selectedLocation != null)
@@ -257,8 +331,16 @@ class _AddLocationPageState extends State<AddLocationPage> {
               ),
             SizedBox(height: 20),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.greenAccent.shade400,
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                textStyle:
+                TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.white),
+
+              ),
               onPressed: _submitForm,
-              child: Text('Gönder'),
+              child: Text('Gönder',style: TextStyle(color: Colors.white)),
+
             ),
           ],
         ),
