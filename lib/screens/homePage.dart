@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   trailing: Icon(Icons.arrow_forward_ios),
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailPage(data: data)));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailPage(data: data,documaIdsi: document.id,)));
                   },
                 ),
               );

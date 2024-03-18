@@ -20,7 +20,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _featureController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
+  //final TextEditingController _cityController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;
   LatLng? _selectedLocation;
@@ -34,7 +34,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
     _nameController.dispose();
     _addressController.dispose();
     _featureController.dispose();
-    _cityController.dispose();
+    //_cityController.dispose();
     super.dispose();
   }
 
@@ -151,7 +151,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      String city = _cityController.text;
+      String city = _selectedCity!;
       String imageUrl = '';
       if (_imageFile != null) {
         imageUrl = await _uploadImageToStorage(File(_imageFile!.path));
@@ -167,7 +167,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
       //   'id':,
       // });
       // Belge referansı oluştur
-      DocumentReference docRef = FirebaseFirestore.instance.collection('cities/$city/location').doc();
+      DocumentReference docRef = await FirebaseFirestore.instance.collection('cities/$city/location').doc();
       // Firestore'a yeni döküman gönder
       await docRef.set({
         'name': _nameController.text,

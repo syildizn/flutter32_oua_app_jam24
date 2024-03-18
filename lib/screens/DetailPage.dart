@@ -160,6 +160,7 @@ class _DetailPageState extends State<DetailPage> {
                         "snapError: ${snapshot.hasError} snapData: ${!snapshot.hasData} snapEmpt: ${snapshot.data?.docs.isEmpty} "
                     );
                     print(snapshot.error.toString());
+                    print("-----!!!!!  DocumentId: $documentId");
                     return Center(child: Text("Henüz yorum yok.",style: TextStyle(fontSize: 16)));
                   }
 
