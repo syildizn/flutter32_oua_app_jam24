@@ -16,5 +16,8 @@ Uygulamada kullanılan flutter sürümü ve dart sdk sürümü aşağıdadır:<b
 
 ## Uygulamanın Fotoğrafları
 ![resim](https://github.com/syildizn/flutter32_oua_app_jam24/blob/main/assets/images/signInPage.jpg)
-
-
+![signUpPage](https://github.com/syildizn/flutter32_oua_app_jam24/blob/main/assets/images/signUpPage.jpg) <br/> <br/>
+![suggestPage](https://github.com/syildizn/flutter32_oua_app_jam24/blob/main/assets/images/suggestPage.jpg)
+![mapsPage](https://github.com/syildizn/flutter32_oua_app_jam24/blob/main/assets/images/mapsPage.jpg) <br/> <br/>
+![homePage](https://github.com/syildizn/flutter32_oua_app_jam24/blob/main/assets/images/homePage.jpg)
+![signUpPage](https://github.com/syildizn/flutter32_oua_app_jam24/blob/main/assets/images/profilPage.jpg) <br/>
