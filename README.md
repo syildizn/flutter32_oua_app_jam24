@@ -1,16 +1,20 @@
-# flutter32_oua_app_jam24
+# WalkPath - Flutter 32 OUA Game/App Jam 24
 
-A new Flutter project.
+Yerel gezgin konseptiyle hazırlanmış bu flutter uygulamasında amaç insanların çevrelerindeki yürüyüş yapabilecekleri alanları detaylı olarak diğer insanlarla paylaşabileceği,diğer insanların paylaştıkları yerler içinde yorumda bulunup onlarla etkileşime girebileceği, yürüyüş ve keşif temalı bir sosyal medya platformudur. Bu uygulama sayesinde insanlar yeni yerlere gittiklerinde o bölgedeki güvenli ve rahat yürüyüş alanlarını bulabilecek ya da kendi bölgelerindeki bu tarz yerleri tanıtabileceklerdir. Uygulamada kullanıcı yeni yerleri detaylı olarak girip google maps ile o bölgenin konumunu işaretleyebilmektedir. Diğer kullanıcılarda o bölgenin detaylı konumuna tıklayıp telefonlarındaki dahili harita uygulamasından o bölgeye navigasyon ile gidebileceklerdir. 
 
-## Getting Started
+### Kullanılan Teknolojiler
+firebase core <br/>
+firebase auth <br/> cloud firestore <br/> firebase storage <br/> image picker <br/> google maps flutter <br/>
+location <br/>
+url launcher <br/>
 
-This project is a starting point for a Flutter application.
+#### Not
+Uygulamada kullanılan flutter sürümü ve dart sdk sürümü aşağıdadır:<br/>
+**Flutter 3.16.9** (Channel stable, 3.16.9, on Microsoft Windows [Version 10.0.19045.4170], locale tr-TR) <br/>
+**Dart 3.2.6** • DevTools 2.28.5
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Uygulamanın Fotoğrafları
+![resim](https://pbs.twimg.com/profile_images/1511043794937991169/3B5fpOw8_400x400.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
