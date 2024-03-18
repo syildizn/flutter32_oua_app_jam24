@@ -22,8 +22,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Ana Sayfa'),
+        backgroundColor: Colors.deepOrange.shade300,
+        title: Text('Ana Sayfa', style: TextStyle(color: Colors.white)),
         actions: <Widget>[
           StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance.collection('cities').snapshots(),
@@ -35,18 +37,39 @@ class _HomePageState extends State<HomePage> {
               print(citiesList);
               return DropdownButton<String>(
                 value: _selectedCity,
-                icon: Icon(Icons.arrow_downward),
+                icon: Icon(Icons.arrow_downward, color: Colors.white),
+                underline: Container(height: 2, color: Colors.white),
+                dropdownColor: Colors.white,
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedCity = newValue!;
                   });
                 },
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                 items: citiesList.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child:  Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: Offset(0, 1), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      margin: EdgeInsets.symmetric(vertical: 4), // Menü öğeleri arasında boşluk
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      child: Text(value, style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold)),
+                    ),
                   );
                 }).toList(),
+
+                itemHeight: 60, // Her bir dropdown menü öğesinin yüksekliği
               );
             },
           ),
@@ -57,8 +80,8 @@ class _HomePageState extends State<HomePage> {
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => SignInPage()));
               },
-              icon: Icon(Icons.exit_to_app_sharp)),
-        ],
+              icon: Icon(Icons.exit_to_app_sharp, color: Colors.white),
+          )],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore
@@ -75,27 +98,35 @@ class _HomePageState extends State<HomePage> {
             return CircularProgressIndicator();
           }
 
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String?, dynamic> data =
-                  document.data()! as Map<String?, dynamic>;
+          return  ListView.builder(
+            itemCount: snapshot.data?.docs.length ?? 0,
+            itemBuilder: (context, index) {
+              DocumentSnapshot document = snapshot.data!.docs[index];
+              Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
-              // Verilerin null olmadığından emin olun
               final String name = data['name'] ?? 'İsim yok';
-              final String address = data['adress'] ?? 'Adres yok';
-              final String image = data['image'] ?? 'https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*'; // Varsayılan bir resim URL'si sağlayın
+              final String address = data['address'] ?? 'Adres yok';
+              final String image = data['image'] ?? 'https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg';
               final String feature = data['feature'] ?? 'Özellik yok';
-              final String documentId = data['id'] ?? document.id.toString();
 
-              return ListTile(
-                title: Text(name),
-                subtitle: Text(address),
-                trailing: Image.network(image, width: 100, height: 100),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailPage(data: data,documaIdsi: document.id.toString(),)));
-                } ,
+              return Card(
+                color: Colors.green.shade50,
+                elevation: 5,
+                margin: EdgeInsets.all(10),
+                child: ListTile(
+                  contentPadding: EdgeInsets.all(10),
+                  title: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text(address),
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(image),
+                  ),
+                  trailing: Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailPage(data: data)));
+                  },
+                ),
               );
-            }).toList(),
+            },
           );
         },
       ),
@@ -106,7 +137,8 @@ class _HomePageState extends State<HomePage> {
             MaterialPageRoute(builder: (context) => AddLocationPage()),
           );
         },
-        child: Icon(Icons.add_location),
+        backgroundColor: Colors.green.shade50,
+        child: Icon(Icons.add, color: Colors.black),
         tooltip: 'Mekan Öner',
       ),
     );

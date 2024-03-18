@@ -48,33 +48,40 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Kayıt Ol'),
+        backgroundColor: Colors.greenAccent.shade400,
+        elevation: 0,
+        title: Text('Kayıt Ol', style: TextStyle(color: Colors.white)),
       ),
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: TextField(
-              onChanged: (value) {
-                setState(() => email = value);
-              },
-              decoration: InputDecoration(labelText: 'Email'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: TextField(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(18.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: 30),
+              Image.asset("assets/images/yu.png", height: 150, width: 400),
+              SizedBox(height: 40),
+              TextField(
+                onChanged: (value) => setState(() => email = value),
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.email),
+                ),
+              ),
+              SizedBox(height: 20),
+            TextField(
+              onChanged: (value) => setState(() => password = value),
               obscureText: !_showPassword,
-              onChanged: (value) {
-                setState(() => password = value);
-              },
               decoration: InputDecoration(
-                labelText: 'Password',
+                labelText: 'Şifre',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.lock),
                 suffixIcon: IconButton(
-                  icon: Icon(
-                    _showPassword ? Icons.visibility : Icons.visibility_off,
-                  ),
+                  icon: Icon(_showPassword ? Icons.visibility : Icons.visibility_off),
                   onPressed: () {
                     setState(() {
                       _showPassword = !_showPassword;
@@ -83,26 +90,37 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
             ),
+              SizedBox(height: 30),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.greenAccent.shade400,
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                child: Text('Kayıt Ol', style: TextStyle(color: Colors.white)),
+                onPressed: () async {
+                  dynamic result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+                  if (result != null) {
+                    _showDialog(title: 'Başarılı', content: 'Başarılı şekilde kayıt oldunuz. Şimdi giriş sayfasına gidip giriş yapabilirsiniz.', navigateToSignIn: true);
+                  } else {
+                    _showDialog(title: 'Hata', content: _errorMessage ?? 'Kayıt olurken bir hata oluştu.');
+                  }
+                },
+              ),
+              SizedBox(height: 30),
+              TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.greenAccent.shade700,
+                ),
+                child: Text('Zaten üye misiniz? O halde giriş yapın'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+          
+                },
+              ),
+            ],
           ),
-          ElevatedButton(
-            child: Text('Kayıt Ol'),
-            onPressed: () async {
-              dynamic result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-              if (result != null) {
-                _showDialog(title: 'Başarılı', content: 'Başarılı şekilde kayıt oldunuz. Şimdi giriş sayfasına gidip giriş yapabilirsiniz.', navigateToSignIn: true);
-              } else {
-                _showDialog(title: 'Hata', content: _errorMessage ?? 'Kayıt olurken bir hata oluştu.');
-              }
-            },
-          ),
-          TextButton(
-            child: Text('Zaten üye misiniz? O halde giriş yapın'),
-            onPressed: () {
-              Navigator.of(context).pop();
-
-            },
-          ),
-        ],
+        ),
       ),
     );
   }

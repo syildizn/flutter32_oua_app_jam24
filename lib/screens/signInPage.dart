@@ -24,7 +24,8 @@ class _SignInPageState extends State<SignInPage> {
         password: password,
       );
       // Giriş işlemi başarılı, HomePage'e yönlendir
-      Navigator.of(context).pushReplacementNamed(HomePage.routeName); // Eğer route isimlerinizi kullanıyorsanız
+      Navigator.of(context).pushReplacementNamed(
+          HomePage.routeName); // Eğer route isimlerinizi kullanıyorsanız
     } catch (e) {
       // Giriş işlemi hatalı, hata mesajını göster
       showDialog(
@@ -48,56 +49,76 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Giriş Yap'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: TextField(
-              onChanged: (value) {
-                setState(() => email = value);
-              },
-              decoration: InputDecoration(labelText: 'Email'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: TextField(
-              obscureText: !_showPassword,
-              onChanged: (value) {
-                setState(() => password = value);
-              },
-              decoration: InputDecoration(
-                labelText: 'Password',
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _showPassword ? Icons.visibility : Icons.visibility_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _showPassword = !_showPassword;
-                    });
-                  },
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.greenAccent.shade400,
+          elevation: 0,
+          title: Text('Giriş Yap', style: TextStyle(color: Colors.white)),
+        ),
+        body: SingleChildScrollView(
+            child: Container(
+          padding: EdgeInsets.all(18.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: 40),
+              Image.asset("assets/images/yu.png",height: 150,width: 400),
+              SizedBox(height: 40),
+              TextField(
+                onChanged: (value) => setState(() => email = value),
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.email),
                 ),
               ),
-            ),
+              SizedBox(height: 20),
+              TextField(
+                onChanged: (value) => setState(() => password = value),
+                obscureText: !_showPassword,
+                decoration: InputDecoration(
+                  labelText: 'Şifre',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _showPassword ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _showPassword = !_showPassword;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(height: 30),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.greenAccent.shade400,
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  textStyle:
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                child: Text('Giriş Yap',style: TextStyle(color: Colors.white)),
+                onPressed: signIn, // signIn metodunu burada çağır
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.greenAccent.shade700,
+                ),
+                child: Text('Üyeliğiniz yok mu? Kayıt olun'),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SignUpPage()),
+                  );
+                },
+              ),
+            ],
           ),
-          ElevatedButton(
-            child: Text('Giriş Yap'),
-            onPressed: signIn, // signIn metodunu burada çağır
-          ),
-          TextButton(
-            child: Text('Üyeliğiniz yok mu? Kayıt olun'),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => SignUpPage()),
-              );
-            },
-          ),
-        ],
-      ),
+        ),
+        ),
     );
   }
 }
